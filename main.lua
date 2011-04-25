@@ -1,9 +1,24 @@
 -- Tutorial 1: particle move
 -- Add a couple of particles and move them around
 
+function init_planes() 
+    TOP_OFFSET = 300
+    LEFT_OFFSET = 300
+    BOTTOM_OFFSET = 300
+    RIGHT_OFFSET = 300
+    
+    planes = {
+        {x = 1,  y = 0, offset = love.graphics.getWidth()/2  - LEFT_OFFSET  }, 
+        {x = -1, y = 0, offset = love.graphics.getWidth()/2  - RIGHT_OFFSET },
+        {x = 0,  y = 1, offset = love.graphics.getHeight()/2 - TOP_OFFSET   },
+        {x = 0, y = -1, offset = love.graphics.getHeight()/2 - BOTTOM_OFFSET}
+    }
+end
 
 function love.load()
     love.graphics.setMode(600,600)
+    
+    init_planes()
 
     circle1 = { x = 79,   y = 215, speedX = -139, speedY = -121 }
     circle2 = { x = 310,  y = 557, speedX = 58,   speedY = 19   }
@@ -26,16 +41,15 @@ function love.load()
     circle19 = { x = 392, y = 267, speedX = 100,  speedY = 141  }
     circle20 = { x = 602, y = 486, speedX = -35,  speedY = 52   }
     circles = {
-                circle1, circle2, circle3, circle4, circle5,
-                circle6, circle7, circle8, circle9, circle10,
-                circle11, circle12, circle13, circle14, circle15,
-                circle16, circle17, circle18, circle19, circle20
-            }
+                circle1 } -- , circle2, circle3, circle4, circle5,
+                --circle6, circle7, circle8, circle9, circle10,
+                --circle11, circle12, circle13, circle14, circle15,
+                --circle16, circle17, circle18, circle19, circle20
+            --}
 
 end
 
 function love.update(dt)
-
     for key, value in pairs(circles) do
         if (value.x < -1) and (value.speedX < 0) then
             value.speedX = -value.speedX
@@ -55,7 +69,24 @@ function love.update(dt)
     end
 end
 
+function check_collision() 
+    for key, circle in pairs(circles) do
+        for key2, plane in pairs(planes) do
+            --print(plane.x.." "..plane.y.." "..plane.offset)
+            local distance = circle.x*plane.x + circle.y*plane.y + plane.offset
+            
+            if distance < 0 then
+                --print("circle at ("..circle.x..", "..circle.y..") hit the edge")
+                love.graphics.print("distance = "..distance, 100, 100)
+            end
+        end
+    end
+end
+
 function love.draw()
+
+    check_collision()
+    
     for key, value in pairs(circles) do
         love.graphics.circle("fill", value.x, value.y, 2)
     end
