@@ -2,10 +2,10 @@
 -- Add a couple of particles and move them around
 
 function init_planes() 
-    TOP_OFFSET = 300
-    LEFT_OFFSET = 300
-    BOTTOM_OFFSET = 300
-    RIGHT_OFFSET = 300
+    TOP_OFFSET = 150
+    LEFT_OFFSET = 150
+    BOTTOM_OFFSET = 150
+    RIGHT_OFFSET = 150
     
     planes = {
         {x = 1,  y = 0, offset = love.graphics.getWidth()/2  - LEFT_OFFSET  }, 
@@ -70,18 +70,48 @@ function love.update(dt)
 end
 
 function check_collision() 
+    
+    local planedist = 0
+
     for key, circle in pairs(circles) do
         for key2, plane in pairs(planes) do
+            planedist = planedist + 50
+            love.graphics.print(plane.x.." "..plane.y.." "..plane.offset, 300, planedist)
             --print(plane.x.." "..plane.y.." "..plane.offset)
-            local distance = circle.x*plane.x + circle.y*plane.y + plane.offset
+            local x,y = coord_to_xy(circle.x, circle.y)
+            local distance = x*plane.x + y*plane.y + plane.offset
             
             if distance < 0 then
+                
                 --print("circle at ("..circle.x..", "..circle.y..") hit the edge")
+                
                 love.graphics.print("distance = "..distance, 100, 100)
             end
         end
     end
 end
+
+function xy_to_coord(x,y) 
+    local x1 = x - love.graphics.getWidth()/2
+    local y1 = y - love.graphics.getHeight()/2
+    return x1, y1
+
+end
+
+function coord_to_xy(x,y)
+    local x1 = x + love.graphics.getWidth()/2
+    local y1 = y + love.graphics.getHeight()/2
+    return x1, y1
+end
+
+function dot_product (x1, y1, x2, y2) 
+
+end
+
+function normalize_vector(v1)
+    return v11 = sqrt(v1.x^2 + v1.y^2)
+end
+
 
 function love.draw()
 
